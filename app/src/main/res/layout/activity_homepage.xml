@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FDFDFD"
+    android:orientation="vertical"
+    tools:context=".viewmodel.HomepageActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+        <ImageButton
+            android:id="@+id/profileButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerVertical="true"
+            android:background="@color/white"
+            android:onClick="showProfile"
+            app:srcCompat="@drawable/ic_action_name" />
+
+        <ImageButton
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            app:srcCompat="@drawable/add_news" />
+
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:padding="10dp">
+
+        <TextView
+            android:id="@+id/userGreeting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:fontFamily="@font/metamorphous"
+            android:paddingBottom="5dp"
+            android:text="Hey"
+            android:textColor="#070707"
+            android:textSize="24sp" />
+
+        <RelativeLayout
+            android:id="@+id/searchBar"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_below="@+id/userGreeting"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="40dp"
+            android:background="#F8F7F7"
+            android:elevation="8dp">
+
+            <SearchView
+                android:id="@+id/searchInput"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:iconifiedByDefault="false"
+                android:queryHint="Search.." />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="20dp">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/newsList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+
+
+    </LinearLayout>
+</ScrollView>
+
+
+</LinearLayout>
