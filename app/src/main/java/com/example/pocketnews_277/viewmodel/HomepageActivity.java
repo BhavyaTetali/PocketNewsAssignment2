@@ -11,6 +11,7 @@ import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -20,20 +21,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.pocketnews_277.R;
 import com.example.pocketnews_277.adapter.NewsListAdapter;
 import com.example.pocketnews_277.model.NewsDataModel;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public class HomepageActivity extends AppCompatActivity implements PopupMenu.OnMenuItemClickListener{
     final String TAG = "HomepageActivity";
     private SearchView simpleSearchView;
     private FirebaseAuth mAuth;
-    private FirebaseDatabase database;
-    private DatabaseReference myRef;
+	FirebaseFirestore db;
     private NewsDataModel newsDataModel;
     private NewsListAdapter adapter;
     private NewsDataViewModel viewModel;
@@ -86,8 +86,7 @@ public class HomepageActivity extends AppCompatActivity implements PopupMenu.OnM
         });
 
         mAuth = FirebaseAuth.getInstance();
-        database = FirebaseDatabase.getInstance();
-        myRef = database.getReference("users");
+        db = FirebaseFirestore.getInstance();
 
         loadHomePage();
     }
@@ -116,28 +115,26 @@ public class HomepageActivity extends AppCompatActivity implements PopupMenu.OnM
     private void loadHomePage(){
 
         FirebaseUser user = mAuth.getCurrentUser();
-       // DatabaseReference currLoggedInUser = myRef.child(user.getUid());
-        // Read from the database
-        myRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
-                String username = "Hey " + dataSnapshot.child(user.getUid()).child("user_name").getValue(String.class) + "!";
-                TextView greeting = findViewById(R.id.userGreeting);
-                greeting.setText(username);
 
-                Log.d(TAG, "Message: " + username);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-                // Failed to read value
-                Log.w(TAG, "Failed to read value.", error.toException());
-            }
-        });
-
-
+		db.collection(user.getUid())
+				.get()
+				.addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+					@Override
+					public void onComplete(@NonNull Task<QuerySnapshot> task) {
+						if (task.isSuccessful()) {
+							for (QueryDocumentSnapshot document : task.getResult()) {
+								if (document.getId().equals("users")) {
+									Log.i(TAG, document.getId() + " => " + document.getData());
+									String username = "Hey " + document.getData().get("user_name") + "!";
+									TextView greeting = findViewById(R.id.userGreeting);
+									greeting.setText(username);
+								}
+							}
+						} else {
+							Log.w(TAG, "Error getting documents from Firestore.", task.getException());
+						}
+					}
+				});
 
     }
 }
