@@ -4,5 +4,5 @@
 Display the news from news/twitter apis via Retrofit, Moshi, livedata and binding. You need to have the news list view with a search bar and news detail view.
 
 ## App Demo ##
-https://youtu.be/QQ0xVmo-iMY
+https://youtu.be/TZl1mJgE-e0
 
